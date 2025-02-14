@@ -5,11 +5,11 @@
 		classes effect the deferred features (constants) by also inheriting
 		from the appropiate constants classes (e.g. MELG_607_CONSTANTS,
 		MELG_19937_CONSTANTS, etc), giving the different period lengths.
-	
+
 		This implementation of the MELG algorithm is modeled after the C-code
 		developed by Shin Harase and Takamitsu Kimoto, which is available
 		at https://github.com/sharase/melg-64.
-		
+
 		This class adapts the code to a more Eiffel-like interface:
 		  1) Getting a random number does not advance the state.  Calling
 		     `item' multiple times without calling `forth' will return
@@ -159,6 +159,18 @@ feature -- Access
 			if is_constrained then
 				Result := Result \\ (upper - lower + One) + lower
 			end
+		end
+
+	integer_item: INTEGER_32
+			-- A random number converted to an integer
+		require
+			upper_small_enough: upper <= {INTEGER_32}.max_value.to_natural_64
+			lower_small_enough: lower <= upper
+		do
+			Result := item.to_integer_32
+		ensure
+			result_big_enough: Result >= 0 and Result >= lower.to_integer_32
+			result_small_enough: Result <= upper.to_integer_32
 		end
 
 	item_63: NATURAL_64
@@ -318,7 +330,7 @@ feature -- Status report
 
 	is_constrained: BOOLEAN
 			-- Should the numbers returned by `item' be restricted to a
-			-- reduced range (i.e. other than [1, max_value]?
+			-- reduced range (i.e. other than [0, max_value]?
 
 feature {NONE} -- Implementation
 
