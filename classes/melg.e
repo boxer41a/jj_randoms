@@ -161,22 +161,56 @@ feature -- Access
 			end
 		end
 
-	integer_item: INTEGER_32
-			-- A random number converted to an integer
+	item_32: NATURAL_32
+			-- A random number converted to an {NATURAL_32}
 		require
-			upper_small_enough: upper <= {INTEGER_32}.max_value.to_natural_64
-			lower_small_enough: lower <= upper
+			upper_small_enough: upper <= {NATURAL_32}.max_value.to_natural_32
 		do
-			Result := item.to_integer_32
+			Result := item.to_natural_32
 		ensure
-			result_big_enough: Result >= 0 and Result >= lower.to_integer_32
-			result_small_enough: Result <= upper.to_integer_32
+			result_big_enough: Result >= 0 and Result >= lower.to_natural_32
+			result_small_enough: Result <= upper.to_natural_32
+		end
+
+	item_16: NATURAL_16
+			-- A random number converted to an {NATURAL_16}
+		require
+			upper_small_enough: upper <= {NATURAL_16}.max_value.to_natural_64
+		do
+			Result := item.to_natural_16
+		ensure
+			result_big_enough: Result >= 0 and Result >= lower.to_natural_16
+			result_small_enough: Result <= upper.to_natural_16
+		end
+
+	item_8: NATURAL_8
+			-- A random number converted to an {NATURAL_32}
+		require
+			upper_small_enough: upper <= {NATURAL_8}.max_value.to_natural_64
+		do
+			Result := item.to_natural_8
+		ensure
+			result_big_enough: Result >= 0 and Result >= lower.to_natural_8
+			result_small_enough: Result <= upper.to_natural_8
 		end
 
 	item_63: NATURAL_64
 			-- A random number in the closed interval [0, Max_value - 1]
 		do
 			Result := item |>> 1
+		end
+
+	integer_item: INTEGER_32
+			-- A random number converted to an {INTEGER_32}
+			-- The result should always be positive.
+		require
+			upper_small_enough: upper <= {INTEGER_32}.max_value.to_natural_64
+		do
+			Result := item.to_integer_32
+		ensure
+			result_big_enough: Result >= 0 and Result >= lower.to_integer_32
+			result_small_enough: Result <= upper.to_integer_32
+			result_not_negative: Result >= 0
 		end
 
 	real_item: REAL_64
